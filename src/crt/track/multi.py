@@ -38,10 +38,7 @@ class _Track:
 
     def predict(self, dt: float) -> None:
         transition = np.array(
-            [[1.0, 0.0, dt, 0.0],
-             [0.0, 1.0, 0.0, dt],
-             [0.0, 0.0, 1.0, 0.0],
-             [0.0, 0.0, 0.0, 1.0]]
+            [[1.0, 0.0, dt, 0.0], [0.0, 1.0, 0.0, dt], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]]
         )
         noise = np.diag([1.0 + dt, 1.0 + dt, 2.0, 2.0])
         self.x = transition @ self.x
@@ -63,8 +60,12 @@ class _Track:
     @property
     def bbox(self) -> tuple[float, float, float, float]:
         x, y = self.x[:2]
-        return (float(x - self.width / 2), float(y - self.height / 2),
-                float(x + self.width / 2), float(y + self.height / 2))
+        return (
+            float(x - self.width / 2),
+            float(y - self.height / 2),
+            float(x + self.width / 2),
+            float(y + self.height / 2),
+        )
 
     def snapshot(self) -> TrackSnapshot:
         return TrackSnapshot(self.track_id, self.bbox, self.state, self.hits, self.last_timestamp)
@@ -117,15 +118,22 @@ class Tracker:
         matched = [(int(i), int(j)) for i, j in zip(row, col) if cost[i, j] <= self.max_distance]
         used_t = {i for i, _ in matched}
         used_d = {j for _, j in matched}
-        return (matched, [i for i in range(len(tracks)) if i not in used_t],
-                [j for j in range(len(detections)) if j not in used_d])
+        return (
+            matched,
+            [i for i in range(len(tracks)) if i not in used_t],
+            [j for j in range(len(detections)) if j not in used_d],
+        )
 
     def update(self, detections: list[Detection], timestamp_seconds: float) -> list[TrackSnapshot]:
         if not np.isfinite(timestamp_seconds) or timestamp_seconds < 0:
             raise ValueError("Timestamp must be finite and nonnegative")
         if self._last_timestamp is not None and timestamp_seconds <= self._last_timestamp:
             raise ValueError("Timestamps must increase; call reset on source gaps")
-        dt = min(timestamp_seconds - self._last_timestamp, 5.0) if self._last_timestamp is not None else 0.0
+        dt = (
+            min(timestamp_seconds - self._last_timestamp, 5.0)
+            if self._last_timestamp is not None
+            else 0.0
+        )
         self._last_timestamp = timestamp_seconds
         for track in self._tracks:
             track.predict(dt)
