@@ -36,6 +36,8 @@ jobs:
         run: pip-audit
       - name: Smoke environment snapshot
         run: crt-env --output env-report.json
+      - name: Synthetic decoder smoke benchmark
+        run: python bench/bench_video.py --frames 5 --out results/ci-smoke.json
 
   secrets:
     runs-on: ubuntu-latest
