@@ -1,0 +1,3 @@
+# M4 shelf-state recognition approach
+A deterministic solid-color SKU counter uses calibrated BGR colors, connected-component counts and normalized polygons. **This is for generated colored mock goods only**, not a trained product detector, and cannot identify real labels or arbitrary grocery stock. A before/after comparison yields signed quantity changes; red/green square examples work, rearranging unchanged counts yields no cart event, and large unidentified colored changes emit `unknown`.
+Only analyze a clear shelf frame **after** an interaction ends and an explicit settle interval. Occluded shelves, changing exposure, swapped near-identical products, reflections, and unknown SKU categories remain unvalidated; never claim these as solved. See design log.

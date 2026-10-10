@@ -21,3 +21,6 @@ Pin and review package dependency licensing before shipping, including transitiv
 | OpenCV Python headless | [Wheel and underlying code terms](https://pypi.org/project/opencv-python/): packaging MIT, OpenCV Apache-2.0, bundled FFmpeg LGPL-2.1 | Review exact wheel's 3rd-party notices prior to redistribution |
 
 These links substantiate *project-level licensing documentation*, not a complete binary redistribution legal review. The runtime dependency audit is enforced by CI; exact dataset/model weight rights remain unverified because neither is selected.
+
+## M2 dependencies
+SciPy 1.17.0: BSD-3-Clause, with third-party notices in source distribution ([project LICENSE](https://github.com/scipy/scipy/blob/main/LICENSE.txt)); only used for Hungarian assignment. OpenCV's built-in pedestrian HOG weights are bundled with the package; no separate dataset or downloadable model is used in M2. Full binary license review is still required before redistributing packaged builds.

@@ -1,3 +1,8 @@
-# Model card
+# Model card: M2 person detection baselines
 
-**No model is selected, trained or shipped in M0.** Planned person detection will favor a separately license-cleared model running on ONNX Runtime. ONNX Runtime's MIT license does **not** grant rights to any particular model weights. Do not silently import AGPL Ultralytics code or use research-only weights. When a candidate is chosen, document exact name, release, code/weight license, origin, datasets, accuracy evaluation, fairness/lighting/occlusion limits, expected hardware and intended/non-intended uses. Until then accuracy is TBD.
+Two baselines, with **no real camera accuracy numbers yet**:
+
+- `ColorMarkerDetector`: deterministic connected components over explicitly blue-coded mock people. Not a trained model, **synthetic only**, cannot be used for general people identification.
+- `OpenCVHOGDetector`: classic pretrained HOG/SVM pedestrian detector bundled with OpenCV. OpenCV source license Apache-2.0; wheel's packaging/FFmpeg/third-party notices require separate review; see DATA.md. HOG score transformed by sigmoid is **not calibrated probability**. It is likely brittle under crowded shelf views, high camera angles, occlusion, small people, reflections, and lighting changes; fairness/demographic performance is **unmeasured**.
+
+No face recognition or reidentification. No model assets are bundled in Git and neither backend is fit for real automated billing. Proposed future licensed ONNX person detector remains an optional extension, not a shipped capability.
