@@ -74,7 +74,7 @@ class OpenCVHOGDetector:
             return []
         boxes, weights = self.hog.detectMultiScale(image[:, :, :3])
         detections: list[Detection] = []
-        for (x, y, w, h), weight in zip(boxes, weights):
+        for (x, y, w, h), weight in zip(boxes, weights, strict=True):
             # HOG margin is uncalibrated; bounded sigmoid is display confidence only.
             score = float(1 / (1 + np.exp(-float(weight))))
             if score >= self.minimum_score:
