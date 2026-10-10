@@ -1,5 +1,4 @@
 import pytest
-
 from eval.metrics import EventLabel, cart_metrics, event_metrics, mota_counts
 
 

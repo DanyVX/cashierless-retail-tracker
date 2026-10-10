@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from tools.calibrate_zones import write_zone
 
 

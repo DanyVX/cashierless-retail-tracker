@@ -1,7 +1,7 @@
 """Tracking/event/cart evaluators; HOTA requires external TrackEval integration."""
 
-from dataclasses import dataclass
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
