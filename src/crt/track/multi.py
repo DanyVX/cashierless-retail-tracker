@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
-from numpy.typing import NDArray
 from scipy.optimize import linear_sum_assignment
 
 from crt.detect import Detection
@@ -115,7 +114,7 @@ class Tracker:
             for j, det in enumerate(detections):
                 cost[i, j] = np.linalg.norm(track.x[:2] - np.array(det.center))
         row, col = linear_sum_assignment(cost)
-        matched = [(int(i), int(j)) for i, j in zip(row, col) if cost[i, j] <= self.max_distance]
+        matched = [(int(i), int(j)) for i, j in zip(row, col, strict=True) if cost[i, j] <= self.max_distance]
         used_t = {i for i, _ in matched}
         used_d = {j for _, j in matched}
         return (
