@@ -45,8 +45,13 @@ class CartEngine:
         for change in changes:
             if change.quantity_delta == 0 and not change.unknown:
                 continue
-            direction: EventKind = ("UNATTRIBUTED_CHANGE" if change.unknown
-                                    else "PICK" if change.quantity_delta < 0 else "RETURN")
+            direction: EventKind = (
+                "UNATTRIBUTED_CHANGE"
+                if change.unknown
+                else "PICK"
+                if change.quantity_delta < 0
+                else "RETURN"
+            )
             owner = interaction.track_id
             confidence = min(change.confidence, interaction.confidence)
             key = (owner, change.zone_id, change.sku, direction)
@@ -62,8 +67,16 @@ class CartEngine:
                 status = "review"
             else:
                 status = "applied"
-            event = CartEvent(direction, timestamp_seconds, owner, change.zone_id, change.sku,
-                              abs(change.quantity_delta), confidence, status)
+            event = CartEvent(
+                direction,
+                timestamp_seconds,
+                owner,
+                change.zone_id,
+                change.sku,
+                abs(change.quantity_delta),
+                confidence,
+                status,
+            )
             if applied and change.sku is not None and owner is not None:
                 cart = self.carts.setdefault(owner, {})
                 if direction == "PICK":
@@ -71,8 +84,16 @@ class CartEngine:
                 elif direction == "RETURN":
                     held = cart.get(change.sku, 0)
                     if held < event.quantity:
-                        event = CartEvent(direction, timestamp_seconds, owner, change.zone_id,
-                                          change.sku, event.quantity, confidence, "review")
+                        event = CartEvent(
+                            direction,
+                            timestamp_seconds,
+                            owner,
+                            change.zone_id,
+                            change.sku,
+                            event.quantity,
+                            confidence,
+                            "review",
+                        )
                         self.review.append(event)
                     else:
                         cart[change.sku] = held - event.quantity
@@ -89,8 +110,9 @@ class CartEngine:
             raise ValueError("Session end is out of order")
         self._last_timestamp = timestamp_seconds
         cart = self.carts.pop(track_id, {})
-        event = CartEvent("SESSION_END", timestamp_seconds, track_id, None, None,
-                          sum(cart.values()), 1.0, "ended")
+        event = CartEvent(
+            "SESSION_END", timestamp_seconds, track_id, None, None, sum(cart.values()), 1.0, "ended"
+        )
         self.history.append(event)
         return event
 

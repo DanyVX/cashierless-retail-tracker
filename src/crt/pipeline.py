@@ -73,7 +73,9 @@ class ShelfPipeline:
                 )
             self._last_clear[item.zone_id] = after
         wrist_zones = {
-            z.zone_id for wrist in wrists for z in self.shelf.zones.zones
+            z.zone_id
+            for wrist in wrists
+            for z in self.shelf.zones.zones
             if z.contains(wrist.x, wrist.y, width, height)
         }
         for zone in self.shelf.zones.zones:

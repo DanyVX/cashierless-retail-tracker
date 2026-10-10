@@ -16,8 +16,17 @@ from crt.shelf import ColorSKU, ShelfReader
 from crt.zones import ShelfZone, ZoneMap
 from eval.metrics import EventLabel, cart_metrics, event_metrics
 
-SCENARIOS = ("single_shopper", "hover", "multi_item", "pick_return",
-             "two_shoppers", "staff_restock", "occlusion", "low_light", "fast_shopper")
+SCENARIOS = (
+    "single_shopper",
+    "hover",
+    "multi_item",
+    "pick_return",
+    "two_shoppers",
+    "staff_restock",
+    "occlusion",
+    "low_light",
+    "fast_shopper",
+)
 
 
 def make_shelf() -> ShelfReader:
@@ -63,8 +72,9 @@ def evaluate_one(name: str) -> dict[str, object]:
         if output:
             for event in output.events:
                 if event.kind in ("PICK", "RETURN") and event.sku is not None:
-                    observations.append(EventLabel(event.timestamp_seconds, event.kind,
-                                                   event.sku, event.quantity))
+                    observations.append(
+                        EventLabel(event.timestamp_seconds, event.kind, event.sku, event.quantity)
+                    )
     measured = time.perf_counter() - started
     truth = [EventLabel(times[-1], "PICK", "chips", amount)] if take else []
     metrics = event_metrics(truth, observations, tolerance=0.25)
@@ -72,7 +82,8 @@ def evaluate_one(name: str) -> dict[str, object]:
     carts = [dict(v) for v in pipe.cart.carts.values()]
     actual_cart = carts[0] if len(carts) == 1 else {}
     return {
-        "scenario": name, "frames": len(times),
+        "scenario": name,
+        "frames": len(times),
         "events": metrics,
         "cart": cart_metrics([expected_cart], [actual_cart]),
         "observed_event_count": len(observations),
