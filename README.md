@@ -1,68 +1,100 @@
 # Cashierless Retail Tracker
 
-A privacy-first **single-camera research prototype** for detecting mock-shelf interactions and maintaining ephemeral virtual carts. This is not a real checkout system.
+**A privacy-first, single-camera cashierless *mock-shelf research prototype***. Tracks temporary sessions, infers shelf picks/returns conservatively, and maintains nonnegative virtual carts. No person identification, payments, theft monitoring or claims of production accuracy.
 
 [![CI](https://github.com/DanyVX/cashierless-retail-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/DanyVX/cashierless-retail-tracker/actions/workflows/ci.yml)
 
 ## Demo
-TBD: no consented, redacted demo has been approved for publication.
+
+Generate an entirely synthetic annotated example locally:
+
+```bash
+python tools/run_demo.py --out results/demo
+```
+
+The command writes `synthetic.gif` (requires ffmpeg) and `events.json`. This is a controlled colored-marker simulation, **not actual retail footage or validated shopper recognition**. No participant images are published.
 
 ## Key results
-| Metric | Measured value |
-| --- | --- |
-| Tracking HOTA / MOTA / IDF1 | TBD (not yet measured on MOT/real recordings) |
-| PICK / RETURN event F1 | TBD (not yet measured) |
-| Exact-cart match | TBD (not yet measured) |
-| CPU throughput (FPS) | TBD (not yet measured) |
 
-This table is intentionally not an accuracy claim. All future figures must be generated from checked, script-produced `results/*.json`, with environment and Git commit metadata.
+| Criterion | Status |
+| --- | --- |
+| MOT17/MOT20 HOTA, MOTA and IDF1 | **TBD (not yet measured)** |
+| Tracking on >=3 consented real mock-shelf clips | **TBD (not yet recorded)** |
+| Real PICK/RETURN precision/recall/F1 | **TBD (not yet measured)** |
+| Real final-cart exact-match | **TBD (not yet measured)** |
+| Face redaction miss-rate on real labeled faces | **TBD (not yet measured)** |
+| CPU decode/marker demonstration | Reproducible scripts; no copied or fabricated numbers |
+
+Synthetic scenario calculations are written only by `eval/run_synthetic.py` to a local JSON file with Git commit and machine configuration. They are toy self-tests, not a substitute for the real-world results above.
 
 ## Why this exists
-Demonstrate a small, auditable perception pipeline for a mock shelf with 5–10 known SKUs. Controlled, consenting participants only. No face recognition, persistent identity, payments, public-space filming, or real-store claims. Ambiguity must be surfaced, never quietly billed.
+
+To build a small, explainable system with privacy and failure detection at its core. It uses explicit **unattributed/review** states when shopper ownership or SKU certainty is insufficient.
 
 ## Architecture
+
 ```mermaid
 flowchart LR
-  A[Consented camera or offline video] --> B[Timestamped streaming frames]
-  B --> C[Person detection and ephemeral tracking]
-  B --> D[Zones and shelf state]
-  C --> E[Interaction attribution]
-  D --> E
-  E --> F[Confidence gated events]
-  F --> G[Virtual carts and evaluation]
+    A[Consented video or synthetic frames] --> B[Timestamp and gap-aware frame stream]
+    B --> C[HOG / synthetic marker detector]
+    C --> D[Kalman and two-stage Hungarian tracker]
+    B --> E[Synthetic magenta wrist markers]
+    D --> F[Zones and interaction attribution]
+    E --> F
+    B --> G[Before and after shelf SKU color counts]
+    F --> H[Pick return or unattributed event]
+    G --> H
+    H --> I[Confidence-gated carts and audit events]
+    I --> J[Synthetic demo or scripted evaluation]
 ```
-M0 implements configuration/privacy and M1 streaming video I/O. M2 adds a CPU HOG pedestrian detector and **synthetic blue-marker detector**, plus an ephemeral Kalman/Hungarian two-stage tracker. **Neither backend is validated on real shelf clips; the color-marker backend is expressly synthetic-only.** Shelf interactions/carts remain planned.
+
+Tracking uses ephemeral IDs; cross-session person re-identification and face recognition are intentionally absent. Real wrist and product detection are **not implemented**, so the synthetic end-to-end demo does *not* prove a cashierless store works.
 
 ## Quickstart
-Python 3.11+; with `uv`:
+
+Python 3.11/3.12 and ffmpeg for GIFs. `uv` preferred:
+
 ```bash
+git clone https://github.com/DanyVX/cashierless-retail-tracker.git
+cd cashierless-retail-tracker
 uv sync --extra dev
-uv run crt-env
 uv run pytest
+uv run python eval/run_synthetic.py
+uv run python tools/run_demo.py
 ```
-With pip: `python -m pip install -e '.[dev]'`, then `crt-env` and `pytest`. Note: clean-machine installation is **not yet verified** and a `uv.lock` cannot be produced in the offline build sandbox (see [environment](docs/ENVIRONMENT.md)).
+
+Pip fallback: `python -m pip install -e '.[dev]'`, then use plain `python`. This environment did not generate a lockfile because direct registry access was blocked in the original sandbox. GitHub CI performs separate fresh-install checks. See `docs/ENVIRONMENT.md`.
 
 ## Usage examples
-`python tools/probe_video.py private_clip.mp4 --consent-confirmed --max-frames 100` reads a consented private mock-shelf clip without saving frames; use `--synthetic` for generated clips. See [video I/O](docs/VIDEO.md).
-`crt-env --output environment.json` produces a non-identifying hardware/toolchain snapshot. Add `--check-network` to opt into a reachability probe. No video is read in M0.
+
+`crt-env --output environment.json` prints a privacy-minimized environment snapshot. `python bench/bench_video.py --frames 30` measures synthetic MJPG decoder performance. `python tools/probe_video.py private.mp4 --consent-confirmed` requires privately verified consent and does not export frames. `python tools/calibrate_zones.py --width 200 --height 120 --points 90,10 185,10 185,100 90,100 --zone A --sku chips` saves normalized calibration geometry.
+
+Generated evaluator: `python eval/run_synthetic.py --out results/synthetic_eval.json`.
 
 ## Configuration
-See [`.env.example`](.env.example). `CRT_BLUR_FACES=true`, `CRT_REQUIRE_CONSENT=true`, `CRT_STORE_RAW_FRAMES=false` and zero retention are defaults, validated through `pydantic-settings`. Capturing participants requires external verified consent. **All media publication is denied** until face-blurring is implemented, measured, and reviewed.
 
-## How to reproduce benchmarks
-M1 contains a synthetic-only CPU video decode smoke benchmark: `python bench/bench_video.py --frames 30`. No detection/tracking/cart metrics have been measured. Future `bench/` and `eval/` scripts must save a Git SHA, hardware and dependency versions with every actual measurement. Metrics must be rendered, not typed into this README. See [results plan](docs/RESULTS.md).
+All privacy settings via `pydantic-settings` from `.env.example`. Default: blur enabled, consent required, raw frame storage disabled, retention zero. Do not add real camera credentials to Git. Publication of real participant media is blocked because the face-blur miss rate is unmeasured.
+
+## Benchmark reproduction
+
+`python eval/run_synthetic.py` records actual generated scenario outcomes to a JSON file, with environment/Git metadata. `python bench/bench_video.py` measures decoder throughput. No real MOT/TrackEval results have been produced. See [evaluation](docs/EVALUATION.md) and [results](docs/RESULTS.md).
 
 ## Design decisions
-See [DESIGN.md](docs/DESIGN.md) and the [recording protocol](docs/RECORDING.md).
+
+See [design log](docs/DESIGN.md), [video I/O](docs/VIDEO.md), [shelf](docs/SHELF.md), [cart](docs/CART.md), [privacy](docs/PRIVACY.md), [demo](docs/DEMO.md), [annotation guide](docs/ANNOTATION.md).
 
 ## Limitations
-M0 has no detector, tracker, video I/O, pose, shelf reasoning, carts, or validated face blur. See [LIMITATIONS.md](docs/LIMITATIONS.md).
+
+The model backends have not been benchmarked on real shelf video. The colored-marker person/wrist/SKU semantics exist only in generated demo scenes; OpenCV HOG is a weak pedestrian baseline. No full ByteTrack, official TrackEval HOTA/IDF1, data-informed calibration, multi-camera view, exit-line cart session closure, or real payment. Read [limitations](docs/LIMITATIONS.md) and [failure cases](docs/FAILURES.md).
 
 ## Roadmap
-M0 setup and consent → M1 video I/O → M2 tracking → M3 zones/hands → M4 shelf change → M5 events/carts → M6 evaluation → M7 privacy safeguards → M8 visualization/release.
+
+M0 repo/privacy foundation; M1 video/timing; M2 track baseline; M3 zones/interactions; M4 color SKU state; M5 cart; M6 synthetic evaluation; M7 redaction and restricted publication; M8 synthetic demo/event buffer. **Future validation**: consented mock recordings, measured face-blur recall, real pose/SKU model with checked licenses, TrackEval and oracle ablations, proper robustness/fairness analyses.
 
 ## License
-MIT for original code only. Every third-party package, dataset and pretrained model has separate terms; see [DATA.md](DATA.md) and [MODEL_CARD.md](MODEL_CARD.md).
+
+MIT for original repository code. See [DATA.md](DATA.md) and [MODEL_CARD.md](MODEL_CARD.md) for wheel, model and dataset-specific licensing caveats.
 
 ## Acknowledgements / citations
-Methods and specific pretrained models will be cited when implemented. OpenCV wheel redistribution also requires reading FFmpeg/third-party notices in its [PyPI license information](https://pypi.org/project/opencv-python/).
+
+OpenCV pedestrian HOG and Haar classifiers are from OpenCV's built-in distribution; SciPy supplies Hungarian matching. Formal methods references and official MOT benchmark sources are documented as future validation requirements, not claimed replicated paper results.

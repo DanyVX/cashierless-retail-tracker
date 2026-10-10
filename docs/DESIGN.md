@@ -40,3 +40,12 @@ No fabricated event across a frame gap, no confident attribution when wrist owne
 The `ColorMarkerDetector` segments deliberately encoded blue rectangles in synthetic scenes; it is not a human detector and cannot be sold as real CV accuracy. OpenCV HOG is the uncalibrated CPU pedestrian baseline, with OpenCV-bundled weights and no third-party download. A constant-velocity 2D Kalman filter with two-stage Hungarian center-distance association and tentative/confirmed/lost/removed track lifecycle approximates **some** ByteTrack ideas; it does not replicate ByteTrack or handle reidentification. Frames after a timeline gap must reset tracks. When a confirmed shopper leaves and returns after removal, a new ID is created. No model benchmark has yet been run.
 
 | 2026-10-10 | Ultralytics AGPL dependency vs OpenCV HOG vs licensed external ONNX model | Built-in OpenCV HOG + clearly synthetic-only blue-marker backend | No unlicensed external weight download; CPU-first with measurable honest limitations |
+
+## M3–M8 decision addendum (2026-10-10)
+- Geometry uses resolution-normalized polygons via OpenCV so a calibration is portable across frame sizes; camera fingerprint/camera drift detection are not complete.
+- Unclear wrist ownership is unattributed, and brief hand hovering does not create a transaction absent a measurable shelf-state change.
+- SKU inference uses simple calibrated colored blocks because unlicensed real data/model checkpoints must not be silently downloaded; this limits the demo to synthetic fixtures.
+- The event reducer is a bounded state machine with confidence review, debouncing, out-of-order refusal, no negative cart, and no anonymous-to-known forced cart transfer.
+- Evaluation scripts compute metrics on generated scenes and store environment metadata. Real HOTA/IDF1 validation is expressly unavailable.
+- Haar face blur is implemented as a baseline but **not** considered complete anonymization; real media publication remains blocked.
+- A synthetic-only demo is generated locally on demand; no real shopper clip, face, weight or API credential is committed.

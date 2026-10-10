@@ -38,6 +38,10 @@ jobs:
         run: crt-env --output env-report.json
       - name: Synthetic decoder smoke benchmark
         run: python bench/bench_video.py --frames 5 --out results/ci-smoke.json
+      - name: Synthetic scenario evaluation
+        run: python eval/run_synthetic.py --out results/ci-evaluation.json
+      - name: Synthetic demo JSON smoke
+        run: python tools/run_demo.py --out results/ci-demo --no-gif
 
   secrets:
     runs-on: ubuntu-latest
