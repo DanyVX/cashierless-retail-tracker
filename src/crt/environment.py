@@ -53,9 +53,7 @@ def environment_snapshot(*, check_network: bool = False) -> dict[str, Any]:
     """Metadata for benchmarks, deliberately excluding usernames, hostname and secrets."""
     disk = shutil.disk_usage(Path.cwd().anchor or ".")
     cuda = _command_output("nvcc", "--version")
-    gpu = _command_output(
-        "nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader"
-    )
+    gpu = _command_output("nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader")
     sha = _command_output("git", "rev-parse", "HEAD")
     return {
         "os": platform.system(),
