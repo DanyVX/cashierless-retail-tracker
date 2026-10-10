@@ -65,7 +65,9 @@ class OpenCVHOGDetector:
             raise ValueError("minimum_score must lie in [0,1]")
         self.minimum_score = minimum_score
         self.hog = cv2.HOGDescriptor()
-        self.hog.setSVMDetector(np.asarray(cv2.HOGDescriptor.getDefaultPeopleDetector(), dtype=np.float32))
+        self.hog.setSVMDetector(
+            np.asarray(cv2.HOGDescriptor.getDefaultPeopleDetector(), dtype=np.float32)
+        )
 
     def detect(self, image: NDArray[np.uint8]) -> list[Detection]:
         if image.ndim != 3 or image.shape[2] not in (3, 4):

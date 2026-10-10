@@ -25,5 +25,8 @@ class MarkerWristDetector:
         b, g, r = cv2.split(image[:, :, :3])
         mask = ((b > 190) & (r > 190) & (g < 90)).astype(np.uint8) * 255
         n, _, stats, centers = cv2.connectedComponentsWithStats(mask, connectivity=8)
-        return [Wrist(float(centers[i, 0]), float(centers[i, 1]))
-                for i in range(1, n) if stats[i, cv2.CC_STAT_AREA] >= 3]
+        return [
+            Wrist(float(centers[i, 0]), float(centers[i, 1]))
+            for i in range(1, n)
+            if stats[i, cv2.CC_STAT_AREA] >= 3
+        ]

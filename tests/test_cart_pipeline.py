@@ -31,8 +31,13 @@ def test_duplicate_low_confidence_unattributed_and_order() -> None:
     cart = CartEngine()
     cart.apply([change(-1)], interaction(), timestamp_seconds=1)
     assert cart.apply([change(-1)], interaction(), timestamp_seconds=1.1) == []
-    assert cart.apply([change(-2)], interaction(confidence=0.2), timestamp_seconds=2)[0].status == "review"
-    assert cart.apply([change(-1)], interaction(None), timestamp_seconds=3)[0].status == "unattributed"
+    assert (
+        cart.apply([change(-2)], interaction(confidence=0.2), timestamp_seconds=2)[0].status
+        == "review"
+    )
+    assert (
+        cart.apply([change(-1)], interaction(None), timestamp_seconds=3)[0].status == "unattributed"
+    )
     with pytest.raises(ValueError):
         cart.apply([change(-1)], interaction(), timestamp_seconds=2.5)
 
@@ -47,7 +52,9 @@ def test_session_end_clears_and_track_ids_not_merged() -> None:
 
 def shelf() -> ShelfReader:
     return ShelfReader(
-        ZoneMap([ShelfZone("shelf", "chips", ((0.48, 0.1), (0.95, 0.1), (0.95, 0.85), (0.48, 0.85)))]),
+        ZoneMap(
+            [ShelfZone("shelf", "chips", ((0.48, 0.1), (0.95, 0.1), (0.95, 0.85), (0.48, 0.85)))]
+        ),
         [ColorSKU("chips", (20, 20, 245))],
     )
 
