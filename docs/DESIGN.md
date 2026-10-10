@@ -35,3 +35,8 @@ Actual camera model, resolution/FPS, mounting angle, lighting, shelf geometry, S
 ## Uncertainty policy
 No fabricated event across a frame gap, no confident attribution when wrist ownership is ambiguous, no guessed unseen SKU, no silent cart mutation below confidence thresholds. Every future result will include counts, failure breakdown, hardware and code revision.
 
+
+## M2 implementation specifics
+The `ColorMarkerDetector` segments deliberately encoded blue rectangles in synthetic scenes; it is not a human detector and cannot be sold as real CV accuracy. OpenCV HOG is the uncalibrated CPU pedestrian baseline, with OpenCV-bundled weights and no third-party download. A constant-velocity 2D Kalman filter with two-stage Hungarian center-distance association and tentative/confirmed/lost/removed track lifecycle approximates **some** ByteTrack ideas; it does not replicate ByteTrack or handle reidentification. Frames after a timeline gap must reset tracks. When a confirmed shopper leaves and returns after removal, a new ID is created. No model benchmark has yet been run.
+
+| 2026-10-10 | Ultralytics AGPL dependency vs OpenCV HOG vs licensed external ONNX model | Built-in OpenCV HOG + clearly synthetic-only blue-marker backend | No unlicensed external weight download; CPU-first with measurable honest limitations |

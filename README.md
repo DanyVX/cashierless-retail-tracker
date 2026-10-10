@@ -10,7 +10,7 @@ TBD: no consented, redacted demo has been approved for publication.
 ## Key results
 | Metric | Measured value |
 | --- | --- |
-| Tracking HOTA / MOTA / IDF1 | TBD (not yet measured) |
+| Tracking HOTA / MOTA / IDF1 | TBD (not yet measured on MOT/real recordings) |
 | PICK / RETURN event F1 | TBD (not yet measured) |
 | Exact-cart match | TBD (not yet measured) |
 | CPU throughput (FPS) | TBD (not yet measured) |
@@ -31,7 +31,7 @@ flowchart LR
   E --> F[Confidence gated events]
   F --> G[Virtual carts and evaluation]
 ```
-M0 implements configuration, privacy gates and environment diagnostics. M1 implements streaming video I/O with explicit discontinuities. Detection, interaction inference and carts remain **planned**, not functional.
+M0 implements configuration/privacy and M1 streaming video I/O. M2 adds a CPU HOG pedestrian detector and **synthetic blue-marker detector**, plus an ephemeral Kalman/Hungarian two-stage tracker. **Neither backend is validated on real shelf clips; the color-marker backend is expressly synthetic-only.** Shelf interactions/carts remain planned.
 
 ## Quickstart
 Python 3.11+; with `uv`:
