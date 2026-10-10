@@ -21,8 +21,9 @@ from crt.zones import ShelfZone, ZoneMap
 
 def demo(out: Path, *, make_gif: bool = True) -> dict[str, object]:
     require_synthetic_media(source_is_synthetic=True)
-    zone = ZoneMap([ShelfZone("A", "chips", ((0.48, 0.1), (0.95, 0.1),
-                                               (0.95, 0.85), (0.48, 0.85)))])
+    zone = ZoneMap(
+        [ShelfZone("A", "chips", ((0.48, 0.1), (0.95, 0.1), (0.95, 0.85), (0.48, 0.85)))]
+    )
     shelf = ShelfReader(zone, [ColorSKU("chips", (20, 20, 245))])
     engine = ShelfPipeline(shelf)
     redactor = FaceRedactor()
@@ -30,8 +31,7 @@ def demo(out: Path, *, make_gif: bool = True) -> dict[str, object]:
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         video = Path(tmp) / "synthetic.avi"
-        writer = cv2.VideoWriter(str(video), cv2.VideoWriter_fourcc(*"MJPG"),
-                                 10.0, (400, 240))
+        writer = cv2.VideoWriter(str(video), cv2.VideoWriter_fourcc(*"MJPG"), 10.0, (400, 240))
         if not writer.isOpened():
             raise RuntimeError("Synthetic video writer unavailable")
         try:
@@ -40,8 +40,7 @@ def demo(out: Path, *, make_gif: bool = True) -> dict[str, object]:
                 cv2.rectangle(frame, (60, 15), (90, 85), (230, 40, 40), -1)
                 count = 2 if i < 9 else 1
                 for j in range(count):
-                    cv2.rectangle(frame, (125 + j * 17, 30), (136 + j * 17, 41),
-                                  (20, 20, 245), -1)
+                    cv2.rectangle(frame, (125 + j * 17, 30), (136 + j * 17, 41), (20, 20, 245), -1)
                 if 5 <= i <= 9:
                     cv2.rectangle(frame, (111, 60), (116, 65), (255, 0, 255), -1)
                 packet = Frame(i, i / 10, frame, "pts", i / 10)
@@ -58,8 +57,17 @@ def demo(out: Path, *, make_gif: bool = True) -> dict[str, object]:
             executable = shutil.which("ffmpeg")
             if executable is None:
                 raise RuntimeError("ffmpeg required for GIF; run with --no-gif for JSON")
-            command = [executable, "-loglevel", "error", "-y", "-i", str(video),
-                       "-vf", "fps=5,scale=400:-1:flags=lanczos", str(out / "synthetic.gif")]
+            command = [
+                executable,
+                "-loglevel",
+                "error",
+                "-y",
+                "-i",
+                str(video),
+                "-vf",
+                "fps=5,scale=400:-1:flags=lanczos",
+                str(out / "synthetic.gif"),
+            ]
             subprocess.run(command, check=True, timeout=30)
     payload = {
         "scope": "fully synthetic scenes, not real humans",
