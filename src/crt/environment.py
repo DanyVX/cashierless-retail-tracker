@@ -44,7 +44,7 @@ def _network_probe() -> bool:
     request = urllib.request.Request("https://github.com", method="HEAD")
     try:
         with urllib.request.urlopen(request, timeout=3) as response:
-            return 200 <= response.status < 500
+            return bool(200 <= response.status < 500)
     except (OSError, urllib.error.URLError):
         return False
 
