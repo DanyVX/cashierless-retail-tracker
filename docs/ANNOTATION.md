@@ -1,0 +1,3 @@
+# Annotation guide (proposed; not implemented)
+
+No real participant footage or labels committed. Use a private dataset of consented mock-shelf sessions, label with CVAT or labelme after checking terms. Proposed JSONL: `frame` records with `timestamp_seconds`, `width`, `height`, and ephemeral track boxes `[track_id,x1,y1,x2,y2]`; `event` records with `type` in `PICK, RETURN, UNATTRIBUTED_CHANGE`, `timestamp_seconds`, `sku`, `quantity`, nullable `track_id`, and `zone_id`. All timestamps are session-relative and monotonic; track identity exists only inside the clip. Have annotators flag competing wrists, occlusion and ambiguous SKU changes instead of inventing ground truth. Split held-out sessions, not neighboring frames.
