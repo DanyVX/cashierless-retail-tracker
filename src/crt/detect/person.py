@@ -48,7 +48,7 @@ class ColorMarkerDetector:
             raise ValueError("Expected BGR image")
         b, g, r = cv2.split(image[:, :, :3])
         mask = ((b > 160) & (g < 110) & (r < 110)).astype(np.uint8) * 255
-        count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+        count, _, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
         found: list[Detection] = []
         for i in range(1, count):
             x, y, w, h, area = (int(v) for v in stats[i])
@@ -65,7 +65,7 @@ class OpenCVHOGDetector:
             raise ValueError("minimum_score must lie in [0,1]")
         self.minimum_score = minimum_score
         self.hog = cv2.HOGDescriptor()
-        self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+        self.hog.setSVMDetector(cv2.HOGDescriptor.getDefaultPeopleDetector())
 
     def detect(self, image: NDArray[np.uint8]) -> list[Detection]:
         if image.ndim != 3 or image.shape[2] not in (3, 4):
