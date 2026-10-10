@@ -27,7 +27,7 @@ jobs:
       - name: Format
         run: ruff format --diff . || true; ruff format --check .
       - name: Lint
-        run: ruff check .
+        run: ruff check --fix --diff . || true; ruff check .
       - name: Type check
         run: mypy src/crt
       - name: Unit tests and coverage

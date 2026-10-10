@@ -1,7 +1,7 @@
 """Tracking/event/cart evaluators; HOTA requires external TrackEval integration."""
 
 from dataclasses import dataclass
-from typing import Sequence
+from collections.abc import Sequence
 
 
 @dataclass(frozen=True)
@@ -64,7 +64,7 @@ def cart_metrics(
     absolute = 0
     missed = 0
     phantom = 0
-    for gt, pred in zip(truth, predicted):
+    for gt, pred in zip(truth, predicted, strict=True):
         if any(q < 0 for q in list(gt.values()) + list(pred.values())):
             raise ValueError("Negative quantities invalid")
         exact += gt == pred

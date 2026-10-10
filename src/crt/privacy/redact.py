@@ -45,5 +45,5 @@ def require_synthetic_media(*, source_is_synthetic: bool) -> None:
     """Fail closed on public output for unvalidated footage of real people."""
     if not source_is_synthetic:
         raise PermissionError(
-            "Public media export blocked: external consent and measured face-blur miss rate required"
+            "Public export blocked: consent and a measured face-blur miss rate are required"
         )

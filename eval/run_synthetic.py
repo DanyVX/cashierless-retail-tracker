@@ -63,7 +63,7 @@ def evaluate_one(name: str) -> dict[str, object]:
     counts = [3, 3, 3, 3 - amount if take else 3, 3 - amount if take else 3]
     observations: list[EventLabel] = []
     started = time.perf_counter()
-    for i, (stamp, count) in enumerate(zip(times, counts)):
+    for i, (stamp, count) in enumerate(zip(times, counts, strict=True)):
         image = build_image(count=count, wrist=i in (2, 3), two=two, low=low)
         if name == "occlusion" and i == 3:
             image[60:90, 100:125] = 0
