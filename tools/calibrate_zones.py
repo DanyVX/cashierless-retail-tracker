@@ -26,11 +26,16 @@ def write_zone(
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
         json.dumps(
-            {"reference_width": width, "reference_height": height,
-             "zones": [{"zone_id": polygon.zone_id, "sku": polygon.sku,
-                        "vertices": polygon.vertices}]},
+            {
+                "reference_width": width,
+                "reference_height": height,
+                "zones": [
+                    {"zone_id": polygon.zone_id, "sku": polygon.sku, "vertices": polygon.vertices}
+                ],
+            },
             indent=2,
-        ) + "\n",
+        )
+        + "\n",
         encoding="utf-8",
     )
 
@@ -49,8 +54,12 @@ def main() -> None:
         if any(len(pt) != 2 for pt in vertices):
             raise ValueError("Each point must be x,y")
         write_zone(
-            points=vertices, width=args.width, height=args.height,
-            zone_id=args.zone, sku=args.sku, output=args.out,
+            points=vertices,
+            width=args.width,
+            height=args.height,
+            zone_id=args.zone,
+            sku=args.sku,
+            output=args.out,
         )
     except ValueError as exc:
         parser.error(str(exc))

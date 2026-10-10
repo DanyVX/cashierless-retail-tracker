@@ -29,5 +29,11 @@ def test_cart_error_costs_and_empty() -> None:
 
 
 def test_mota_counts_well_defined() -> None:
-    assert mota_counts(ground_truth_detections=10, misses=2, false_positives=1, id_switches=1)["mota"] == 0.6
-    assert mota_counts(ground_truth_detections=0, misses=0, false_positives=0, id_switches=0)["mota"] is None
+    assert (
+        mota_counts(ground_truth_detections=10, misses=2, false_positives=1, id_switches=1)["mota"]
+        == 0.6
+    )
+    assert (
+        mota_counts(ground_truth_detections=0, misses=0, false_positives=0, id_switches=0)["mota"]
+        is None
+    )

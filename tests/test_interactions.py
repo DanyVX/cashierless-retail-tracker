@@ -32,7 +32,10 @@ def test_zone_invalid_and_overlap_ambiguous() -> None:
 
 def test_dwell_emits_on_leave_not_hover_short() -> None:
     detector = InteractionDetector(setup_zones(), min_dwell_seconds=0.2)
-    assert detector.update([Wrist(60, 40)], [person(1)], timestamp_seconds=0, width=100, height=100) == []
+    assert (
+        detector.update([Wrist(60, 40)], [person(1)], timestamp_seconds=0, width=100, height=100)
+        == []
+    )
     assert detector.update([], [person(1)], timestamp_seconds=0.1, width=100, height=100) == []
     detector.update([Wrist(60, 40)], [person(1)], timestamp_seconds=1.0, width=100, height=100)
     changed = detector.update([], [person(1)], timestamp_seconds=1.3, width=100, height=100)
@@ -42,13 +45,17 @@ def test_dwell_emits_on_leave_not_hover_short() -> None:
 
 def test_two_people_ambiguous_prevents_attribution() -> None:
     detector = InteractionDetector(setup_zones(), min_dwell_seconds=0)
-    detector.update([Wrist(60, 40)], [person(1, 30), person(2, 60)], timestamp_seconds=0, width=100, height=100)
+    detector.update(
+        [Wrist(60, 40)], [person(1, 30), person(2, 60)], timestamp_seconds=0, width=100, height=100
+    )
     changes = detector.update([], [], timestamp_seconds=0.1, width=100, height=100)
     assert changes[0].track_id is None
 
 
 def test_staff_excluded() -> None:
-    detector = InteractionDetector(setup_zones(), min_dwell_seconds=0, staff_track_ids=frozenset({1}))
+    detector = InteractionDetector(
+        setup_zones(), min_dwell_seconds=0, staff_track_ids=frozenset({1})
+    )
     detector.update([Wrist(60, 40)], [person(1)], timestamp_seconds=0, width=100, height=100)
     assert detector.update([], [], timestamp_seconds=1, width=100, height=100)[0].track_id is None
 
