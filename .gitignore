@@ -37,3 +37,7 @@ consent/
 # Generated reproducibility reports unless explicitly reviewed
 results/*.json
 !results/.gitkeep
+
+results/demo/
+results/synthetic_eval.json
+results/video_smoke.json

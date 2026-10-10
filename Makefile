@@ -15,8 +15,9 @@ test-fast:
 	pytest -q -m 'not slow and not gpu'
 bench:
 	$(PYTHON) bench/bench_video.py --frames 30
+	$(PYTHON) -m eval.run_synthetic
 run:
-	$(PYTHON) tools/probe_video.py --help
+	$(PYTHON) tools/run_demo.py --out results/demo
 docker-build:
 	@echo 'No Dockerfile exists; Docker deployment is not implemented.'
 clean:

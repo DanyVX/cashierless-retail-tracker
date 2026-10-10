@@ -1,9 +1,16 @@
-# Limitations, risks and uncovered scenarios
+# Limitations and uncovered conditions
 
-M0 was infrastructure only. M1 now has a basic video reader, but there is **no detector, tracker, hand detection, shelf inference, cart, API, face blur or cashierless real-time demo**. No participant or dataset recording exists, no experimental results are measured, no model licensing finalized. M0 recording decisions remain unconfirmed.
+This is a **mock-shelf simulation prototype**, not a cashierless deployment. Original media must be consented; all public demo media is fully synthetic.
 
-The sandbox has no GPU or Docker, and lacks direct GitHub DNS; not a claim about the target deployment device. `uv.lock` and fresh-clone quickstart verification remain pending because dependency resolution cannot reach registries.
+- No real camera, real participant annotations, staff recordings, measured faces or ground-truth video evaluations were available. HOTA/IDF1/real MOTA and real event/cart error rates are **not measured**.
+- OpenCV HOG pedestrian detection is weak on overhead shelf footage and unmeasured here. Synthetic blue rectangles are not evidence of person detection.
+- Magenta wrist markers and calibrated solid-color SKUs are synthetic stand-ins, not human pose estimation or general grocery product recognition; product appearance, unseen variants and near-duplicate brands remain unsupported.
+- Kalman and Hungarian two-stage association is a simplified tracker, not official ByteTrack; crossing people and occlusion can cause ID switches. Session IDs are ephemeral.
+- No automatic exit-line session closure, secure cart transfer after ID switches, multi-camera identity, real payments or identity verification. The explicit cart `end_session` call requires orchestration by a caller.
+- Shelf lighting, camera rotation, hand occlusion, gloves, staff mode, calibration drift, time-lapse, reflective wrappers and camera shaking have not been robustly tested in real settings.
+- The face-redaction baseline is **best effort**. No measured miss rate, so public real-person media export is blocked. Real persistent storage is unavailable; no encryption/erase pipeline for persisted biometric data is claimed.
+- Event stream buffer is in-memory, bounded and records drops, but is not an authenticated HTTP API. Real queue backpressure/replay protection is not implemented.
+- Synthetic script includes named scenarios with generated data, not real repeated experiments or statistically significant confidence intervals. Official TrackEval and oracle ablations remain incomplete.
+- No external model/dataset licenses beyond documented project-level information have been reviewed for redistributable field use. Avoid unverified downloads.
 
-Future single-camera limitations include shelf/people occlusion, ID switches, crossing shoppers, camera shake, low FPS, confusable SKUs, deceptive shelf rearrangement and small consented dataset bias. These must each be assessed or explicitly marked uncovered as milestones progress. Media exports are forbidden pending validated face blur.
-
-M1 adds a basic consent-gated video reader, but no model/tracking/cart. Synthetic timing and RTSP reconnection are mock-tested, not verified with an actual camera. See [VIDEO.md](VIDEO.md) for backend-specific constraints.
+All failures are evidence of work left, not a reason to invent success metrics.
