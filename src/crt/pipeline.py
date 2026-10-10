@@ -10,7 +10,7 @@ from crt.events import CartEngine, CartEvent, InteractionDetector
 from crt.io import Frame, TimelineGap
 from crt.pose import MarkerWristDetector, Wrist
 from crt.shelf import ShelfReader, ShelfSnapshot
-from crt.track import TrackSnapshot, Tracker
+from crt.track import Tracker, TrackSnapshot
 
 
 @dataclass(frozen=True)
