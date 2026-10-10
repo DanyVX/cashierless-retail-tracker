@@ -12,14 +12,14 @@ license = {file = "LICENSE"}
 authors = [{name = "Danial Hassan"}]
 dependencies = [
     "pydantic==2.13.5",
-    "pydantic-settings==2.14.1",
+    "pydantic-settings==2.14.2",
 ]
 
 [project.optional-dependencies]
 dev = [
     "ruff==0.13.3",
     "mypy==1.18.2",
-    "pytest==9.0.2",
+    "pytest==9.0.3",
     "pytest-cov==7.0.0",
     "hypothesis==6.140.0",
     "pre-commit==4.3.0",
