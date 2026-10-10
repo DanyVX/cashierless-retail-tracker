@@ -71,7 +71,7 @@ class ShelfReader:
             color = np.array(sku.bgr, dtype=np.int16)
             close = np.all(np.abs(crop - color) <= sku.tolerance, axis=2)
             mask = (close & (valid > 0) & (claimed == 0)).astype(np.uint8)
-            n, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+            n, _, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
             counts[sku.sku] = sum(
                 1 for i in range(1, n) if stats[i, cv2.CC_STAT_AREA] >= sku.min_blob_area
             )
