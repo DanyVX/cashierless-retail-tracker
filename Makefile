@@ -14,9 +14,9 @@ test:
 test-fast:
 	pytest -q -m 'not slow and not gpu'
 bench:
-	@echo 'TBD: M0 has no benchmark; measured numbers are intentionally absent.'
+	$(PYTHON) bench/bench_video.py --frames 30
 run:
-	$(PYTHON) -m crt.environment
+	$(PYTHON) tools/probe_video.py --help
 docker-build:
 	@echo 'No Dockerfile exists; Docker deployment is not implemented.'
 clean:

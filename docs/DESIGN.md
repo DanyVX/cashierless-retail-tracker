@@ -27,8 +27,11 @@ No payments, public surveillance, face identification, persistent identity, mult
 | 2026-10-10 | Permissive media export vs fail closed | Ban publishing and raw storage in M0 | Face blur and consent verification not yet implemented |
 | 2026-10-10 | Notebook-only vs installable Python modules | src-layout, strict tests and CI | Reproducibility and maintainability |
 
+| 2026-10-10 | Hardcode constant FPS vs use source PTS when present | PTS with marked FPS fallback and explicit gap packets | Expose temporal uncertainty instead of inventing pick/return events across missing frames |
+
 ## Open M0 blockers
 Actual camera model, resolution/FPS, mounting angle, lighting, shelf geometry, SKU list and participants' consent cannot be inferred. The [recording protocol](RECORDING.md) records required fields as TBD. A high-front/top-down camera is a *recommendation*, not a confirmed setup.
 
 ## Uncertainty policy
 No fabricated event across a frame gap, no confident attribution when wrist ownership is ambiguous, no guessed unseen SKU, no silent cart mutation below confidence thresholds. Every future result will include counts, failure breakdown, hardware and code revision.
+

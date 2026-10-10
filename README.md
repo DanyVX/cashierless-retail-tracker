@@ -31,7 +31,7 @@ flowchart LR
   E --> F[Confidence gated events]
   F --> G[Virtual carts and evaluation]
 ```
-M0 implements only configuration, privacy gates, and environment diagnostics. Everything from frame I/O onward is a **planned interface**, not deployed functionality.
+M0 implements configuration, privacy gates and environment diagnostics. M1 implements streaming video I/O with explicit discontinuities. Detection, interaction inference and carts remain **planned**, not functional.
 
 ## Quickstart
 Python 3.11+; with `uv`:
@@ -43,13 +43,14 @@ uv run pytest
 With pip: `python -m pip install -e '.[dev]'`, then `crt-env` and `pytest`. Note: clean-machine installation is **not yet verified** and a `uv.lock` cannot be produced in the offline build sandbox (see [environment](docs/ENVIRONMENT.md)).
 
 ## Usage examples
+`python tools/probe_video.py private_clip.mp4 --consent-confirmed --max-frames 100` reads a consented private mock-shelf clip without saving frames; use `--synthetic` for generated clips. See [video I/O](docs/VIDEO.md).
 `crt-env --output environment.json` produces a non-identifying hardware/toolchain snapshot. Add `--check-network` to opt into a reachability probe. No video is read in M0.
 
 ## Configuration
 See [`.env.example`](.env.example). `CRT_BLUR_FACES=true`, `CRT_REQUIRE_CONSENT=true`, `CRT_STORE_RAW_FRAMES=false` and zero retention are defaults, validated through `pydantic-settings`. Capturing participants requires external verified consent. **All media publication is denied** until face-blurring is implemented, measured, and reviewed.
 
 ## How to reproduce benchmarks
-M0 has no performance results. Future `bench/` and `eval/` scripts must save a Git SHA, hardware and dependency versions with every actual measurement. Metrics must be rendered, not typed into this README. See [results plan](docs/RESULTS.md).
+M1 contains a synthetic-only CPU video decode smoke benchmark: `python bench/bench_video.py --frames 30`. No detection/tracking/cart metrics have been measured. Future `bench/` and `eval/` scripts must save a Git SHA, hardware and dependency versions with every actual measurement. Metrics must be rendered, not typed into this README. See [results plan](docs/RESULTS.md).
 
 ## Design decisions
 See [DESIGN.md](docs/DESIGN.md) and the [recording protocol](docs/RECORDING.md).
