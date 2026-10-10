@@ -88,7 +88,9 @@ class InteractionDetector:
             current = present.get(zone_id)
             if current is None:
                 if timestamp_seconds - started >= self.dwell:
-                    emitted.append(Interaction(zone_id, owner, started, timestamp_seconds, confidence))
+                    emitted.append(
+                        Interaction(zone_id, owner, started, timestamp_seconds, confidence)
+                    )
                 del self.active[zone_id]
             elif current[0] != owner:
                 # Cannot safely stitch interacting hands that change owner.
