@@ -59,7 +59,7 @@ git clone https://github.com/DanyVX/cashierless-retail-tracker.git
 cd cashierless-retail-tracker
 uv sync --extra dev
 uv run pytest
-uv run python eval/run_synthetic.py
+uv run python -m eval.run_synthetic
 uv run python tools/run_demo.py
 ```
 
@@ -69,7 +69,7 @@ Pip fallback: `python -m pip install -e '.[dev]'`, then use plain `python`. This
 
 `crt-env --output environment.json` prints a privacy-minimized environment snapshot. `python bench/bench_video.py --frames 30` measures synthetic MJPG decoder performance. `python tools/probe_video.py private.mp4 --consent-confirmed` requires privately verified consent and does not export frames. `python tools/calibrate_zones.py --width 200 --height 120 --points 90,10 185,10 185,100 90,100 --zone A --sku chips` saves normalized calibration geometry.
 
-Generated evaluator: `python eval/run_synthetic.py --out results/synthetic_eval.json`.
+Generated evaluator: `python -m eval.run_synthetic --out results/synthetic_eval.json`.
 
 ## Configuration
 
@@ -77,7 +77,7 @@ All privacy settings via `pydantic-settings` from `.env.example`. Default: blur 
 
 ## Benchmark reproduction
 
-`python eval/run_synthetic.py` records actual generated scenario outcomes to a JSON file, with environment/Git metadata. `python bench/bench_video.py` measures decoder throughput. No real MOT/TrackEval results have been produced. See [evaluation](docs/EVALUATION.md) and [results](docs/RESULTS.md).
+`python -m eval.run_synthetic` records actual generated scenario outcomes to a JSON file, with environment/Git metadata. `python bench/bench_video.py` measures decoder throughput. No real MOT/TrackEval results have been produced. See [evaluation](docs/EVALUATION.md) and [results](docs/RESULTS.md).
 
 ## Design decisions
 

@@ -15,7 +15,7 @@ test-fast:
 	pytest -q -m 'not slow and not gpu'
 bench:
 	$(PYTHON) bench/bench_video.py --frames 30
-	$(PYTHON) eval/run_synthetic.py
+	$(PYTHON) -m eval.run_synthetic
 run:
 	$(PYTHON) tools/run_demo.py --out results/demo
 docker-build:
