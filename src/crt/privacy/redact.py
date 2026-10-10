@@ -1,6 +1,7 @@
 """Best-effort face redaction; unverified misses forbid publishing real people."""
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -17,7 +18,7 @@ class FaceRedactor:
     """OpenCV Haar baseline; not guaranteed to detect profile/occluded faces."""
 
     def __init__(self) -> None:
-        path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+        path = str(Path(cv2.__file__).resolve().parent / "data" / "haarcascade_frontalface_default.xml")
         self.classifier = cv2.CascadeClassifier(path)
         if self.classifier.empty():
             raise RuntimeError("Bundled Haar face model could not be loaded")

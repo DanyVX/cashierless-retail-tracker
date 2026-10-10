@@ -84,16 +84,16 @@ class InteractionDetector:
             else:
                 present[zone.zone_id] = (owner, conf)
         emitted: list[Interaction] = []
-        for zone, (started, owner, confidence) in list(self.active.items()):
-            current = present.get(zone)
+        for zone_id, (started, owner, confidence) in list(self.active.items()):
+            current = present.get(zone_id)
             if current is None:
                 if timestamp_seconds - started >= self.dwell:
-                    emitted.append(Interaction(zone, owner, started, timestamp_seconds, confidence))
-                del self.active[zone]
+                    emitted.append(Interaction(zone_id, owner, started, timestamp_seconds, confidence))
+                del self.active[zone_id]
             elif current[0] != owner:
                 # Cannot safely stitch interacting hands that change owner.
-                self.active[zone] = (timestamp_seconds, None, 0.0)
-        for zone, (owner, confidence) in present.items():
-            if zone not in self.active:
-                self.active[zone] = (timestamp_seconds, owner, confidence)
+                self.active[zone_id] = (timestamp_seconds, None, 0.0)
+        for zone_id, (owner, confidence) in present.items():
+            if zone_id not in self.active:
+                self.active[zone_id] = (timestamp_seconds, owner, confidence)
         return emitted
