@@ -26,16 +26,17 @@ class FaceRedactor:
         if image.ndim != 3 or image.shape[2] != 3:
             raise ValueError("Expected 3-channel BGR frame")
         grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = self.classifier.detectMultiScale(grayscale, scaleFactor=1.1,
-                                                 minNeighbors=4, minSize=(20, 20))
+        faces = self.classifier.detectMultiScale(
+            grayscale, scaleFactor=1.1, minNeighbors=4, minSize=(20, 20)
+        )
         output = image.copy()
         n = 0
         for x, y, w, h in faces:
-            roi = output[y:y + h, x:x + w]
+            roi = output[y : y + h, x : x + w]
             if roi.size == 0:
                 continue
             # Strong blur, not a guarantee of irreversible anonymization.
-            output[y:y + h, x:x + w] = cv2.GaussianBlur(roi, (41, 41), 0)
+            output[y : y + h, x : x + w] = cv2.GaussianBlur(roi, (41, 41), 0)
             n += 1
         return output, RedactionStats(len(faces), n)
 

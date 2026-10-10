@@ -32,9 +32,12 @@ class ShelfZone:
         arr = np.array(self.vertices)
         left, top = arr.min(axis=0)
         right, bottom = arr.max(axis=0)
-        return (max(0, int(left * width)), max(0, int(top * height)),
-                min(width, int(np.ceil(right * width))),
-                min(height, int(np.ceil(bottom * height))))
+        return (
+            max(0, int(left * width)),
+            max(0, int(top * height)),
+            min(width, int(np.ceil(right * width))),
+            min(height, int(np.ceil(bottom * height))),
+        )
 
 
 class ZoneMap:

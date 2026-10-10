@@ -20,6 +20,10 @@ def require_media_publication_allowed(*, settings: Settings) -> None:
 
 
 __all__ = [
-    "FaceRedactor", "RedactionStats", "PrivacyViolation", "require_recording_consent",
-    "require_media_publication_allowed", "require_synthetic_media",
+    "FaceRedactor",
+    "RedactionStats",
+    "PrivacyViolation",
+    "require_recording_consent",
+    "require_media_publication_allowed",
+    "require_synthetic_media",
 ]
